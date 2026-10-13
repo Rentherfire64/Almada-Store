@@ -18,30 +18,33 @@
         <input type="text" id="hora" placeholder="Hora (ej: 16:30)">
         <button onclick="enviarTurnoWeb()">Confirmar Reserva Web</button>
     </div>
-
     <script>
-        async function enviarTurnoWeb() {
-            const payload = {
-                cliente_nombre: document.getElementById('nombre').value,
-                servicio: document.getElementById('servicio').value,
-                hora: document.getElementById('hora').value,
-                origen: "Página Web 🌐",
-                estado: "confirmado"
-            };
+    async function enviarTurnoWeb() {
+        const payload = {
+            cliente_nombre: document.getElementById('nombre').value,
+            servicio: document.getElementById('servicio').value,
+            fecha_hora: "2026-10-12T" + document.getElementById('hora').value + ":00"
+        };
 
-            const res = await fetch("https://tu-proyecto.supabase.co/rest/v1/turnos", {
+        try {
+            const res = await fetch("http://127.0.0.1:8000/api/v1/turnos", {
                 method: "POST",
                 headers: {
-                    "apikey": "tu_anon_key_de_supabase",
-                    "Authorization": "Bearer tu_anon_key_de_supabase",
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(payload)
             });
 
-            if(res.ok) alert("¡Turno registrado desde la Web!");
-            else alert("Error al registrar turno.");
+            if (res.ok) {
+                alert("¡Turno registrado con éxito en tu servidor local!");
+            } else {
+                alert("Error en el servidor al guardar el turno.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("No se pudo conectar con http://127.0.0.1:8000. Asegurate de tener ejecutando 'python main.py'.");
         }
-    </script>
+    }
+</script>
 </body>
 </html>
