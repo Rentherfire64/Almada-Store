@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reserva de Turnos - Demo Web</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; display: flex; justify-content: center; }
+        .card { background: #1e1e1e; padding: 25px; border-radius: 12px; width: 320px; }
+        input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 6px; border: none; box-sizing: border-box; }
+        button { background: #2563eb; color: white; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Reservá tu Turno</h2>
+        <input type="text" id="nombre" placeholder="Tu Nombre">
+        <input type="text" id="servicio" placeholder="Servicio (ej: Pestañas)">
+        <input type="text" id="hora" placeholder="Hora (ej: 16:30)">
+        <button onclick="enviarTurnoWeb()">Confirmar Reserva Web</button>
+    </div>
+
+    <script>
+        async function enviarTurnoWeb() {
+            const payload = {
+                cliente_nombre: document.getElementById('nombre').value,
+                servicio: document.getElementById('servicio').value,
+                hora: document.getElementById('hora').value,
+                origen: "Página Web 🌐",
+                estado: "confirmado"
+            };
+
+            const res = await fetch("https://tu-proyecto.supabase.co/rest/v1/turnos", {
+                method: "POST",
+                headers: {
+                    "apikey": "tu_anon_key_de_supabase",
+                    "Authorization": "Bearer tu_anon_key_de_supabase",
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if(res.ok) alert("¡Turno registrado desde la Web!");
+            else alert("Error al registrar turno.");
+        }
+    </script>
+</body>
+</html>
