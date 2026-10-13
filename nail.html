@@ -19,32 +19,41 @@
         <button onclick="enviarTurnoWeb()">Confirmar Reserva Web</button>
     </div>
     <script>
+    const SUPABASE_URL = "https://TU_PROYECTO_REAL.supabase.co/rest/v1/turnos";
+    const SUPABASE_KEY = "TU_ANON_KEY_REAL_DE_SUPABASE";
+
     async function enviarTurnoWeb() {
         const payload = {
             cliente_nombre: document.getElementById('nombre').value,
             servicio: document.getElementById('servicio').value,
-            fecha_hora: "2026-10-12T" + document.getElementById('hora').value + ":00"
+            hora: document.getElementById('hora').value,
+            origen: "Página Web 🌐",
+            estado: "confirmado"
         };
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/v1/turnos", {
+            const res = await fetch(SUPABASE_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
                 },
                 body: JSON.stringify(payload)
             });
 
             if (res.ok) {
-                alert("¡Turno registrado con éxito en tu servidor local!");
+                alert("¡Turno guardado con éxito en Supabase!");
             } else {
-                alert("Error en el servidor al guardar el turno.");
+                const errData = await res.json();
+                console.error(errData);
+                alert("Error de Supabase: " + (errData.message || res.statusText));
             }
         } catch (error) {
-            console.error("Error:", error);
-            alert("No se pudo conectar con http://127.0.0.1:8000. Asegurate de tener ejecutando 'python main.py'.");
+            alert("Error de conexión. Verificá la URL de Supabase.");
         }
     }
-</script>
+</script>   
 </body>
 </html>
